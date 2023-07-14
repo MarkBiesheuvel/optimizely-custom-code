@@ -1,8 +1,5 @@
 // Using the "When a callback is called" page activation trigger
 // See https://docs.developers.optimizely.com/web/docs/dynamic-websites#section-callback
-
-
-// Use "old" function syntax as the Optimizely editor does not allow arrow syntax here
 function callbackFn(activate) {
 
   // Get Optimizely Utilities library
@@ -26,7 +23,7 @@ function callbackFn(activate) {
         }
       });
     });
-    
+
     // Only activate the page/experiment once the container is visible
     observer.observe(elem);
   });
