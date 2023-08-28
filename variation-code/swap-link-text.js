@@ -1,8 +1,12 @@
 // Get Optimizely Utilities library
 const utils = window.optimizely.get('utils');
 
-// Wait until new resort card elements are added to the page (via infinite scroll)
-utils.observeSelector('[data-cy="resortCard"]', (card) => {
+// Wait until new resort card elements (plus its children) are added to the page (via infinite scroll)
+utils.observeSelector('[data-cy="resortCard"] a.bg-none > span', (child) => {
+
+  // Find the parent element
+  const card = child.closest('[data-cy="resortCard"]');
+
   // Find links within the card (primary has a background, secondary has not)
   const primaryLink = card.querySelector('a.bg-ep-blue-050');
   const secondaryLink = card.querySelector('a.bg-none');
