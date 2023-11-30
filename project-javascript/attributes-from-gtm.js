@@ -1,16 +1,40 @@
-// Initialize the Optimizely global variable
+// Initialize the Optimizely and dataLayer global variable
 window.optimizely = window.optimizely || [];
+window.dataLayer = window.dataLayer || [];
 
-// Find the GTM dataLayer event with name `sqzl_customer_audiences`
-const sqzlAudiences = dataLayer.find(({event}) => event == 'sqzl_customer_audiences');
+// Find the GTM dataLayer event with name `page_view`
+const pageEvent = dataLayer.find(({event}) => event == 'page_view');
 
-// Set custom user attributes if `sqzl_customer_audiences` is found
-if (sqzlAudiences) {
+if (pageEvent) {
+    // Update account_type attribute if `page_view` was found
     window.optimizely.push({
         type: 'user',
         attributes: {
-            isFoo: sqzlAudiences.audiences.indexOf(111) !== -1,
-            isBar: sqzlAudiences.audiences.indexOf(222) !== -1
+            account_type: pageEvent.account_type
         }
     });
+} else {
+    // Capture the original dataLayer.push function
+    const originalPushFunction = window.dataLayer.push;
+
+    window.dataLayer.push = function() {
+        // Collect the arguments
+        const args = [].slice.call(arguments, 0);
+
+        // Deconstruct event
+        const {event, account_type} = arguments[0];
+
+        // Update account_type attribute
+        if (event === 'page_view') {
+            window.optimizely.push({
+                type: 'user',
+                attributes: {
+                    account_type
+                }
+            });
+        }
+
+        // Run the original dataLayer.push function
+        return originalPushFunction.apply(window.dataLayer, args);
+    };
 }
