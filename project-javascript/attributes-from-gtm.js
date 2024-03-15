@@ -6,35 +6,35 @@ window.dataLayer = window.dataLayer || [];
 const pageEvent = dataLayer.find(({event}) => event == 'page_view');
 
 if (pageEvent) {
-    // Update account_type attribute if `page_view` was found
-    window.optimizely.push({
+  // Update account_type attribute if `page_view` was found
+  window.optimizely.push({
+    type: 'user',
+    attributes: {
+      account_type: pageEvent.account_type
+    }
+  });
+} else {
+  // Capture the original dataLayer.push function
+  const originalPushFunction = window.dataLayer.push;
+
+  window.dataLayer.push = function() {
+    // Collect the arguments
+    const args = [].slice.call(arguments, 0);
+
+    // Deconstruct event
+    const {event, account_type} = arguments[0];
+
+    // Update account_type attribute
+    if (event === 'page_view') {
+      window.optimizely.push({
         type: 'user',
         attributes: {
-            account_type: pageEvent.account_type
+          account_type
         }
-    });
-} else {
-    // Capture the original dataLayer.push function
-    const originalPushFunction = window.dataLayer.push;
+      });
+    }
 
-    window.dataLayer.push = function() {
-        // Collect the arguments
-        const args = [].slice.call(arguments, 0);
-
-        // Deconstruct event
-        const {event, account_type} = arguments[0];
-
-        // Update account_type attribute
-        if (event === 'page_view') {
-            window.optimizely.push({
-                type: 'user',
-                attributes: {
-                    account_type
-                }
-            });
-        }
-
-        // Run the original dataLayer.push function
-        return originalPushFunction.apply(window.dataLayer, args);
-    };
+    // Run the original dataLayer.push function
+    return originalPushFunction.apply(window.dataLayer, args);
+  };
 }

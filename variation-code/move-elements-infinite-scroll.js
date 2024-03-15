@@ -6,7 +6,7 @@ utils.observeSelector('.product-label', (label) => {
 
   // Find the parent element
   const parent = label.closest('.product-card');
-  
+
   // Find a child of the same parent (i.e. a sibling)
   const imageWrapper = parent.querySelector('.product-card__image-wrapper');
 

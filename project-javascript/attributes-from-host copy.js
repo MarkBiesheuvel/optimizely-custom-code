@@ -3,8 +3,8 @@ window.optimizely = window.optimizely || [];
 
 // Set hostname attribute
 window.optimizely.push({
-    type: 'user',
-    attributes: {
-        hostname: window.location.hostname
-    }
+  type: 'user',
+  attributes: {
+    hostname: window.location.hostname
+  }
 });
