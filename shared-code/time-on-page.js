@@ -9,7 +9,7 @@ const eventName = 'example_time_on_page';
 const startDate = new Date();
 
 // Attach event listener
-window.addEventListener('beforeunload', () => {
+window.addEventListener('pagehide', () => {
   const endDate = new Date();
   const spentTime = (endDate.getTime() - startDate.getTime()) / 1000;
 
