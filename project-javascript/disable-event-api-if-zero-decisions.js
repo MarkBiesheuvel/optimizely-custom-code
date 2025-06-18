@@ -12,25 +12,30 @@ XMLHttpRequest.prototype.open = function(_method, url, _async, _user, _password)
 
 // Override the send method to capture and modify the payload
 XMLHttpRequest.prototype.send = function(body) {
-  // Only modify requests to the Event API
-  if (this._requestedUrl && this._requestedUrl.includes('logx.optimizely')) {
-    try {
+  try {
+    // Only modify requests to the Optimizely Event API
+    if (this._requestedUrl && this._requestedUrl.includes('logx.optimizely')) {
+
       // Parse the payload
       const payload = JSON.parse(body);
 
       // Modify the payload
       const containsDecisions = payload.visitors.some(visitor => visitor.snapshots.some(snapshot => snapshot.decisions.length > 0));
 
-      // Do not send out payload and potentially save an MAU
       if (!containsDecisions) {
         console.info('Not sending request to Optimizely Event API since it does not contain any decisions.');
+        // Call onload handler. This removes the pending event from the queue
+        if (typeof this.onload === 'function') {
+          this.onload();
+        }
+        // Return early. This prevents the request from being send, which potentially saves an MAU
         return;
       }
-    } catch (e) {
-      console.warn('Error while analyzing Optimizely Event API request.', e);
     }
+  } catch (e) {
+    console.warn('Error while intercepting XMLHttpRequest.', e);
   }
 
-  // Call the original send method with modified or original data
+  // Call the original send method
   originalSend.call(this, body);
 };
