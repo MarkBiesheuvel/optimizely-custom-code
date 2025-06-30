@@ -1,0 +1,18 @@
+.free-shipping-wrapper {
+  font-size: 14px;
+  text-align: center;
+  padding: 0 10px 15px;
+}
+.progress-bar-wrapper {
+  background: #E1E1E1;
+  height: 8px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  border-radius: 4px;
+}
+.progress-bar {
+  background-color: grey;
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease-in-out;
+}
