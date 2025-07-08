@@ -1,11 +1,12 @@
-const freeShippingThreshold = 99.00;
+const freeShippingThreshold = extension.free_shipping_threshold;
 
 const utils = window.optimizely.get('utils');
 
 // Get the order summery element from page
 utils.waitForElement('[data-test-id="cart-order-summary"]').then((summaryElement) => {
   // Insert template
-  summaryElement.insertAdjacentHTML('beforeend', extension.$html);
+  const titleElem = document.querySelector('[data-test-id="cart-order-summary"] > p');
+  titleElem.insertAdjacentHTML('afterend', extension.$html);
 
   // Get elements from template
   const textElem = document.getElementById('progress-bar-text');
@@ -27,11 +28,11 @@ utils.waitForElement('[data-test-id="cart-order-summary"]').then((summaryElement
     } else {
       textElem.textContent = 'Your order qualifies for free shipping!';
     }
-  }
+  };
 
   // Update once on activation, ...
   updateProgress();
   // ... and monitor for updates to the subtotal
   const observer = new MutationObserver(updateProgress);
-  observer.observe(subtotalElem, { characterData: true });
+  observer.observe(subtotalElem, {childList: true, subtree: true, characterData: true});
 });
