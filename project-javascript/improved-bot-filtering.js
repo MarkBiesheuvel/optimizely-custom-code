@@ -6,6 +6,7 @@ const botList = [
   'Chrome-Lighthouse',
   'DatadogSynthetics',
   'Googlebot',
+  'Storebot-Google',
   'Speed Insights',
   'WebPageTest',
   'HeadlessChrome',
